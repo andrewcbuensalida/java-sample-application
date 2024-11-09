@@ -1,3 +1,12 @@
+## My notes
+When starting the server, errored with 
+`Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.`
+This is because resTemplate's @Bean is in the same LinkedInOAuthController class as @Autowired.
+
+## Exception in thread "main" java.lang.NoSuchMethodError: 'org.springframework.core.io.support.SpringFactoriesLoader org.springframework.core.io.support.SpringFactoriesLoader.forDefaultResourceLocation(java.lang.ClassLoader)'
+When trying to run, this error occurs. SpringApplication in MainApplication is blue, but it's supposed to be green.
+
+
 # Sample Application for LinkedIn APIs
 
 > Please take a 1-minute survey to help us help you, with more Sample Apps for LinkedIn APIs.
