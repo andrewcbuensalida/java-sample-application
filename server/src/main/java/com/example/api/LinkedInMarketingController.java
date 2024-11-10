@@ -36,6 +36,7 @@ public final class LinkedInMarketingController {
 
   @GetMapping("/hello")
   public String hello() {
+    System.out.println(token);
     return "Hello, World!";
   }
   
