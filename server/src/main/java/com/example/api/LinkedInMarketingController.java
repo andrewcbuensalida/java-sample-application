@@ -33,13 +33,6 @@ public final class LinkedInMarketingController {
   private Logger logger = Logger.getLogger(LinkedInMarketingController.class.getName());
   private HttpHeaders header = new HttpHeaders();
 
-
-  @GetMapping("/hello")
-  public String hello() {
-    System.out.println(token);
-    return "Hello, World!";
-  }
-  
   /**
    * Find Ad Accounts by Authenticated User or Verifying Ad Accounts Access
    * 

@@ -24,12 +24,13 @@
 							OAuth functions to generate access token in server
 							component
 						</p>
-						<a
-							th:href="${auth_url}"
-							target="_blank"
-							class="btn-link three"
-							>3 Legged OAuth</a
-						>
+            <!-- three legged oauth step 2 click this -->
+            <a
+              th:href="${auth_url}"
+              class="btn-link three"
+              >3 Legged OAuth</a
+            >
+            <!-- two legged auth step 1 this won't work i guess because it is not member specific? -->
 						<input
 							type="submit"
 							name="two_legged_auth"
@@ -37,12 +38,14 @@
 							value="2 Legged OAuth"
 						/>
 						<p>OAuth token calls</p>
+            <!-- token introspection step 1 -->
 						<input
 							type="submit"
 							name="token_introspection"
 							class="btn-link"
 							value="Token Introspection"
 						/>
+            <!-- Refresh token step 1 This doesn't work because I never got a refresh token when it was supposed to be with the access token when first doing the 3 legged oauth -->
 						<input
 							type="submit"
 							name="refresh_token"
@@ -52,6 +55,7 @@
 						<p>
 							Use access token stored in server to make REST calls
 						</p>
+            <!-- Get Profile step 1 this doesn't work -->
 						<input
 							type="submit"
 							name="profile"

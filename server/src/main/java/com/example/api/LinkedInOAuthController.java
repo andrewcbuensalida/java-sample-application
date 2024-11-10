@@ -69,7 +69,7 @@ public final class LinkedInOAuthController {
     return new RedirectView(client_url);
   }
 
-  // step 4 after user logs in through linkedin, they are redirected to
+  // three legged oauth step 4  after user logs in through linkedin, they are redirected to
   // localhost:8080/login?code=123...
   /**
    * Make a Login request with LinkedIN Oauth API
@@ -106,20 +106,17 @@ public final class LinkedInOAuthController {
           new AccessToken()
       };
       HttpEntity request = service.getAccessToken3Legged(code);
-      // step 5 authorization code is exchanged for an access token from linkedin
+      // three legged oauth step 5 authorization code is exchanged for an access token from linkedin
       String response = restTemplate.postForObject(REQUEST_TOKEN_URL, request, String.class);
       accessToken[0] = service.convertJsonTokenToPojo(response);
 
       prop.setProperty("token", accessToken[0].getAccessToken());
       token = accessToken[0].getAccessToken();
       refresh_token = accessToken[0].getRefreshToken(); // null
-      System.out.println("Token:.......... " + token);
-      System.out.println("Refresh Token:@@@@@@@@@@@@@ " + refresh_token);
-      logger.log(Level.INFO, "Generated Access token and Refresh Token.");
 
       redirectView.setUrl(prop.getProperty("client_url"));
     } else {
-      // step 3 user is redirected to LinkedIn login page
+      // three legged oauth step 3 user is redirected to LinkedIn login page
       // https://www.linkedin.com/uas/login?session_redirect...
       redirectView.setUrl(authorizationUrl);
     }
@@ -131,6 +128,7 @@ public final class LinkedInOAuthController {
    *
    * @return Redirects to the client UI after successful token creation
    */
+  // doesn't work because linkedin api is broken
   @RequestMapping(value = "/twoLeggedAuth")
   public RedirectView two_legged_auth() throws Exception {
     loadProperty();
@@ -149,13 +147,11 @@ public final class LinkedInOAuthController {
     };
 
     HttpEntity request = service.getAccessToken2Legged();
+    // two legged auth step 2 get access token from linkedin already. 3 legged has a step before this which is getting the authorization code first. This doesn't work error: "message":"401 Unauthorized: [no body]","path":"/twoLeggedAuth"}"
     String response = restTemplate.postForObject(REQUEST_TOKEN_URL, request, String.class);
     accessToken[0] = service.convertJsonTokenToPojo(response);
     prop.setProperty("token", accessToken[0].getAccessToken());
     token = accessToken[0].getAccessToken();
-    logger.log(Level.INFO, token);
-
-    logger.log(Level.INFO, "Generated Access token.");
 
     redirectView.setUrl(prop.getProperty("client_url"));
     return redirectView;
@@ -167,18 +163,15 @@ public final class LinkedInOAuthController {
    * @return check the Time to Live (TTL) and status (active/expired) for all
    *         token
    */
-
-  // step 7
-  @RequestMapping(value = "/tokenIntrospection")
-  public String token_introspection() throws Exception {
-    logger.log(Level.INFO, "Token introspection request received.");
-    logger.log(Level.INFO, "The wonderful Token is {0}", token);
-    if (service != null) {
-      HttpEntity request = service.introspectToken(token);
-      // step 8 POST request to linkedin's token introspection endpoint to get the
-      // token details like expiry time, active, etc
+// three legged oauth step 2
+@RequestMapping(value = "/tokenIntrospection")
+public String token_introspection() throws Exception {
+  if (service != null) {
+    HttpEntity request = service.introspectToken(token);
+    // three legged oauth step 8 POST request to linkedin's token introspection endpoint to get the
+    // token details like expiry time, active, etc
+    // token introspection step 2
       String response = restTemplate.postForObject(TOKEN_INTROSPECTION_URL, request, String.class);
-      logger.log(Level.INFO, "Token introspected. Details are {0}", response);
 
       return response;
     } else {
@@ -197,6 +190,7 @@ public final class LinkedInOAuthController {
     String response = null;
     if (refresh_token != null) {
       HttpEntity request = service.getAccessTokenFromRefreshToken(refresh_token);
+      // Refresh token step 2 this doesn;t work because never got the refresh token when first logging in with three legged oauth
       response = restTemplate.postForObject(REQUEST_TOKEN_URL, request, String.class);
       logger.log(Level.INFO, "Used Refresh Token to generate a new access token successfully.");
       return response;
@@ -211,16 +205,17 @@ public final class LinkedInOAuthController {
    *
    * @return Public profile of user
    */
-  // After clicking the Get Profile button.
-  // Forbidden:
-  // "{"status":403,"serviceErrorCode":100,"code":"ACCESS_DENIED","message":"Not
-  // enough permissions to access: me.GET.NO_VERSION"}"]
   @RequestMapping(value = "/profile")
   public String profile() {
-    logger.log(Level.INFO,
-        "Public profile request received................................................................1");
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.USER_AGENT, USER_AGENT_OAUTH_VALUE);
+    // Get Profile step 3 this errors because linkedin api is broken. scope should be openid
+    // but it's erroring, using scope profile instead but it doesn't have enough
+    // permissions
+    // Forbidden:
+    // "{"status":403,"serviceErrorCode":100,"code":"ACCESS_DENIED","message":"Not
+    // enough permissions to access: me.GET.NO_VERSION"}"]
+    // response is supposed to be 
     return restTemplate.exchange(LI_ME_ENDPOINT + token, HttpMethod.GET, new HttpEntity<>(headers), String.class)
         .getBody();
     // return "profile page";

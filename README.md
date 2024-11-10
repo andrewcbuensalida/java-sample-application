@@ -1,10 +1,11 @@
+https://lucid.app/lucidchart/86337980-3302-4563-93c0-2158b4c57887/edit?viewport_loc=-10%2C-10%2C1707%2C871%2C0_0&invitationId=inv_c6a641bf-d993-416c-8beb-d4ef26ddc39b
+
 ## My notes
 When starting the server, errored with 
 `Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.`
 This is because resTemplate's @Bean is in the same LinkedInOAuthController class as @Autowired.
 
-## Exception in thread "main" java.lang.NoSuchMethodError: 'org.springframework.core.io.support.SpringFactoriesLoader org.springframework.core.io.support.SpringFactoriesLoader.forDefaultResourceLocation(java.lang.ClassLoader)'
-When trying to run, this error occurs. SpringApplication in MainApplication is blue, but it's supposed to be green.
+app is working but linkedin api is broken. they don't give enough permissions.
 
 
 # Sample Application for LinkedIn APIs
