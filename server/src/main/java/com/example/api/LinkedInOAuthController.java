@@ -69,7 +69,8 @@ public final class LinkedInOAuthController {
     return new RedirectView(client_url);
   }
 
-  // step 4 after user logs in through linkedin, they are redirected to localhost:8080/login?code=123...
+  // step 4 after user logs in through linkedin, they are redirected to
+  // localhost:8080/login?code=123...
   /**
    * Make a Login request with LinkedIN Oauth API
    *
@@ -96,7 +97,7 @@ public final class LinkedInOAuthController {
 
     RedirectView redirectView = new RedirectView();
 
-    //  
+    //
     if (code != null && !code.isEmpty()) {
 
       logger.log(Level.INFO, "Authorization code not empty, trying to generate a 3-legged OAuth token.");
@@ -167,14 +168,15 @@ public final class LinkedInOAuthController {
    *         token
    */
 
-  // step 7 
+  // step 7
   @RequestMapping(value = "/tokenIntrospection")
   public String token_introspection() throws Exception {
     logger.log(Level.INFO, "Token introspection request received.");
     logger.log(Level.INFO, "The wonderful Token is {0}", token);
     if (service != null) {
       HttpEntity request = service.introspectToken(token);
-      // step 8 POST request to linkedin's token introspection endpoint to get the token details like expiry time, active, etc
+      // step 8 POST request to linkedin's token introspection endpoint to get the
+      // token details like expiry time, active, etc
       String response = restTemplate.postForObject(TOKEN_INTROSPECTION_URL, request, String.class);
       logger.log(Level.INFO, "Token introspected. Details are {0}", response);
 
@@ -209,18 +211,19 @@ public final class LinkedInOAuthController {
    *
    * @return Public profile of user
    */
-// After clicking the Get Profile button. 
-// Forbidden:
-// "{"status":403,"serviceErrorCode":100,"code":"ACCESS_DENIED","message":"Not
-// enough permissions to access: me.GET.NO_VERSION"}"]
+  // After clicking the Get Profile button.
+  // Forbidden:
+  // "{"status":403,"serviceErrorCode":100,"code":"ACCESS_DENIED","message":"Not
+  // enough permissions to access: me.GET.NO_VERSION"}"]
   @RequestMapping(value = "/profile")
   public String profile() {
-    logger.log(Level.INFO, "Public profile request received................................................................1");
+    logger.log(Level.INFO,
+        "Public profile request received................................................................1");
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.USER_AGENT, USER_AGENT_OAUTH_VALUE);
     return restTemplate.exchange(LI_ME_ENDPOINT + token, HttpMethod.GET, new HttpEntity<>(headers), String.class)
         .getBody();
-        // return "profile page";
+    // return "profile page";
   }
 
   private void loadProperty() throws IOException {

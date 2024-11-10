@@ -51,7 +51,8 @@ public final class MainController {
   private String SERVER_URL;
 
   // step 1. going to localhost:8989 will render the OAuth page
-  // step 6 go back to localhost:8989 after getting exchanging the auth code for the access token
+  // step 6 go back to localhost:8989 after getting exchanging the auth code for
+  // the access token
   /**
    * Serves a html webpage with operations related to OAuth
    *
@@ -65,7 +66,7 @@ public final class MainController {
     String response = "";
     String output = "";
     try {
-      // step 7 
+      // step 7
       response = Rest_Template.getForObject(SERVER_URL + TOKEN_INTROSPECTION_ENDPOINT, String.class);
       logger.log(Level.INFO,
           "Validating if a token is already in session. Response from token introspection end point is: {0}", response);
@@ -85,8 +86,8 @@ public final class MainController {
     logger.log(Level.INFO,
         "Completed execution for rendering OAuth page. The model values are output:::::: {0}, action::::::::: {1}.",
         new String[] { output, action });
-    
-    return OAUTH_PAGE ;
+
+    return OAUTH_PAGE;
   }
 
   /**
@@ -97,14 +98,16 @@ public final class MainController {
    * @param model Spring Boot Model
    * @return a page to render on UI
    */
-  // 
+  //
   @PostMapping(path = "/", produces = { "application/json", "application/xml" }, consumes = {
       "application/x-www-form-urlencoded" })
   public String postBody(@RequestBody final String data, final Model model) {
     String response = "";
     String action = "";
 
-    logger.log(Level.INFO, "..............................................................................Handling on click of marketing page buttons. Button clicked is {0}", data);
+    logger.log(Level.INFO,
+        "..............................................................................Handling on click of marketing page buttons. Button clicked is {0}",
+        data);
 
     if (data.equals(CASE_TWO_LEGGED_TOKEN_GEN)) {
       action = ACTION_2_LEGGED_TOKEN_GEN;
